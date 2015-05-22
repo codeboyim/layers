@@ -1,0 +1,18 @@
+{
+  "name": "layers",
+  "version": "0.0.1",
+  "description": "A Category/Sub-category UI component built on backbonejs",
+  "main": "dist/main",
+  "scripts": {
+    "build:dev": "node build/makefile.js",
+    "prebuild": "rm -rf dist/*"
+  },
+  "author": "me@codeboy.im",
+  "license": "ISC",
+  "devDependencies": {
+    "babel": "^5.4.5",
+    "backbone": "^1.2.0",
+    "jquery": "^2.1.4",
+    "underscore": "^1.8.3"
+  }
+}
