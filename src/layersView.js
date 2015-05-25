@@ -1,11 +1,20 @@
 class LayersView extends Backbone.View {
 
-    initialize() {
+    constructor(options) {
+        options = options || {};
 
+        _.defaults(options, {
+            className: 'comp-layers'
+        });
+
+        super(options);
     }
 
+    initialize() {}
+
     render() {
-        this.$el.html('<h1>welcome</h1>')
+        console.log(this.className);
+        this.$el.html('<h1>welcome1</h1>')
         return this.$el;
     }
 }

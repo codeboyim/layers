@@ -7,7 +7,7 @@ class Layers {
             throw 'please specify the DOM element which this component will be appended to';
         }
 
-        (new LayersView).render().appendTo($(container));
+        (new LayersView()).render().appendTo($(container));
     }
 
 }

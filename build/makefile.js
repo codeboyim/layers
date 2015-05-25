@@ -8,16 +8,18 @@ var script = '',
 files.splice(files.indexOf('main.js'), 1);
 
 files.forEach(function(f) {
+
+		if(f.match(/\.js/gi)){
+
     script += fs.readFileSync('src/' + f);
+		}
 })
 
 script += fs.readFileSync('src/main.js', {
     encoding: 'utf8'
 });
 
-script = babel.transform(script, {
-    // 'modules': 'ignore'
-}).code;
+script = babel.transform(script).code;
 
 script = fs.readFileSync('build/preFrag.js') + script;
 script += fs.readFileSync('build/postFrag.js');
