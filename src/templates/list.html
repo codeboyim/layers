@@ -1,0 +1,18 @@
+<% if(data.groups && data.groups.length) {%>
+<ul class="comp-layer-groups">
+	<% _.each(data.groups, function(g){%>
+	<li>
+		<%- g.description %>
+	</li>
+	<%});%>
+</ul>
+<%}%>
+<% if(data.items && data.items.length) {%>
+<ul class="comp-layer-items">
+	<% _.each(data.items, function(item){%>
+	<li>
+		<%- item.description %>
+	</li>
+	<%});%>
+</ul>
+<%}%>

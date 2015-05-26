@@ -4,10 +4,7 @@ class LayersView extends Backbone.View {
         options = options || {};
 
         _.defaults(options, {
-            className: 'comp-layers',
-            attributes: {
-                'data-attr': 'test'
-            }
+            className: 'comp-layers'
         });
 
         super(options);
