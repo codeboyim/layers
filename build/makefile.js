@@ -3,22 +3,26 @@ var fs = require('fs'),
 
 var script = '',
     len = 0,
-    files = fs.readdirSync('src');
+    models = fs.readdirSync('src/models'),
+    views = fs.readdirSync('src/views'),
+    templates = fs.readdirSync('src/templates'),
+    regExpFileName = /(.*)\..*/gi;
 
-files.splice(files.indexOf('main.js'), 1);
-
-files.forEach(function(f) {
-
-		if(f.match(/\.js/gi)){
-
-    script += fs.readFileSync('src/' + f);
-		}
+models.forEach(function(m) {
+    script += fs.readFileSync('src/models/' + m);
 })
 
-script += fs.readFileSync('src/main.js', {
-    encoding: 'utf8'
-});
+templates.forEach(function(t) {
+    var fn = regExpFileName.exec(t)[1],
+        varName = 'var tmpl' + String.fromCharCode(fn.charCodeAt(0) - 32) + fn.substr(1);
+    script += varName + '=\'' + fs.readFileSync('src/templates/' + t).toString().replace('\'', '\\\'') + '\';';
+})
 
+views.forEach(function(v) {
+    script += fs.readFileSync('src/views/' + v);
+})
+
+script += fs.readFileSync('src/main.js');
 script = babel.transform(script).code;
 
 script = fs.readFileSync('build/preFrag.js') + script;
