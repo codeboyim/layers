@@ -1,13 +1,14 @@
 class GroupModel extends Backbone.Model {
 
-    constructor() {
+    constructor(options) {
+        options = options || {};
+        _.defaults(options, {
+            defaults: {
+                description: '',
+                groups: null
+            }
+        })
 
-        super();
-
-        this.defaults = {
-            description: '',
-            groups: null,
-            items: null
-        };
+        super(options);
     }
 }

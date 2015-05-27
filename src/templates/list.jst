@@ -1,18 +1,7 @@
-<% if(data.groups && data.groups.length) {%>
-<ul class="comp-layer-groups">
-	<% _.each(data.groups, function(g){%>
-	<li>
-		<%- g.description %>
-	</li>
-	<%});%>
-</ul>
-<%}%>
-<% if(data.items && data.items.length) {%>
-<ul class="comp-layer-items">
-	<% _.each(data.items, function(item){%>
-	<li>
-		<%- item.description %>
-	</li>
-	<%});%>
-</ul>
-<%}%>
+<% if(data.groups && data.groups.length) {
+_.each(data.groups, function(group, i){%>
+<li data-dblclick="open" data-type="group" data-index="<%-i%>">
+	<div <%- group._edit?'contenteditable':'' %>><%- group.description %></div><span data-clic="edit">edit</span>
+</li>
+<%});
+}%>

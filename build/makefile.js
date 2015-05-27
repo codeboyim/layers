@@ -23,7 +23,9 @@ templates.forEach(function(t) {
 
         script += varName + '=\'' + fs.readFileSync('src/templates/' + t).toString()
             .replace(/\'/g, '\\\'')
+            .replace(/\"/g, '\\\"')
             .replace(/\r/g, '\\\r')
+            .replace(/\t/g, '\\\t')
             .replace(/\n/g, '\\\n') + '\';';
     }
 })
