@@ -4,6 +4,7 @@
   "description": "A Category/Sub-category UI component built on backbonejs",
   "main": "dist/main",
   "scripts": {
+    "prebuild:dev": "rm -rf src/**/*.log",
     "build:dev": "node build/makefile.js",
     "prebuild": "rm -rf dist/*"
   },
