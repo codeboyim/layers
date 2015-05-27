@@ -17,7 +17,7 @@ models.forEach(function(m) {
 templates.forEach(function(t) {
     var fn;
 
-    if (/\.html$/.test(t)) {
+    if (/\.jst$/.test(t)) {
         fn = /(.*)\..*/gi.exec(t)[1];
         var varName = 'var tmpl' + String.fromCharCode(fn.charCodeAt(0) - 32) + fn.substr(1);
 
