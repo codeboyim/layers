@@ -6,8 +6,11 @@ class ListView extends Backbone.View {
         _.defaults(options, {
             className: 'comp-layers-list',
             events: {
-                'dblclick [data-dblclick]': '_domEvent',
-                'focusout [contenteditable]': '_domEvent'
+                'dblclick [data-dblclick]': '_handleDomEvents',
+                'focusout [contenteditable]': '_handleDomEvents',
+                'focusin [data-name=newItem]': '_handleNewItemEvents',
+                'focusout [data-name=newItem]': '_handleNewItemEvents',
+                'keypress [data-name=newItem]': '_handleNewItemEvents'
             }
         });
 
@@ -16,22 +19,24 @@ class ListView extends Backbone.View {
 
     initialize(options) {
 
-        this.model = options.model || new GroupModel;
+        this.model = options.model || new ItemModel;
         this.template = _.template(tmplList, null, {
             variable: 'data'
         });
 
-        console.log(GroupModel.prototype.defaults);
+        this.model.items.on('all', this.render, this);
     }
 
     render() {
         let $list = $(this.template(this.model.toJSON())),
             $listItems = $list.children(),
-            groups = this.model.get('groups');
+            items = this.model.items.toJSON();
 
-        if (_.isArray(groups)) {
-            _.each(groups, function(group, i) {
-                $listItems.eq(i).data('dataItem', group);
+            console.log(items.length);
+
+        if (_.isArray(items)) {
+            _.each(items, function(item, i) {
+                $listItems.eq(i).data('dataItem', item);
             })
         }
 
@@ -39,16 +44,49 @@ class ListView extends Backbone.View {
         return this.$el;
     }
 
-    _domEvent(e) {
+    _handleDomEvents(e) {
         let type = e.type,
             $t = $(type === 'click' ? e.currentTarget : e.target),
-            group;
+            item;
 
         if (type === 'dblclick') {
 
         } else if (type === 'click') {
 
         } else if (type === 'focusout') {
+
+        }
+    }
+
+    _handleNewItemEvents(e) {
+        let $newItem = $(e.target),
+            desc;
+
+        e.stopPropagation();
+
+        switch (e.type) {
+            case 'focusin':
+                $newItem.text('');
+                break;
+
+            case 'focusout':
+                $newItem.text($newItem.data('placeholder'));
+                break;
+
+            case 'keypress':
+                if ((e.which || e.keyCode || e.charCode) === 13) {
+                    e.preventDefault();
+
+                    if ((desc = $newItem.text()).trim()) {
+
+                        this.model.items.add({
+                            description: desc
+                        });
+
+                        $newItem.blur().focusout();
+                    }
+                }
+                break;
 
         }
     }

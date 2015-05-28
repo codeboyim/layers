@@ -1,7 +1,10 @@
-<% if(data.groups && data.groups.length) {
-_.each(data.groups, function(group, i){%>
-<li data-dblclick="open" data-type="group" data-index="<%-i%>">
-	<div <%- group._edit?'contenteditable':'' %>><%- group.description %></div><span data-clic="edit">edit</span>
+<% if(data.items && data.items.length) {
+_.each(data.items, function(item, i){%>
+<li data-dblclick="open" class="comp-layers-list-item" data-index="<%-i%>">
+	<div <%- item._edit?'contenteditable':'' %>><%- item.description %></div><span data-clic="edit">edit</span><span data-clic="delete">delete</span>
 </li>
 <%});
 }%>
+<li>
+	<div data-name="newItem" contenteditable data-placeholder="enter new item here">enter new item here</div>
+</li>
