@@ -4,13 +4,14 @@ class ListView extends Backbone.View {
         options = options || {};
 
         _.defaults(options, {
-            className: 'comp-layers-list',
+            className: 'layers-list',
+            tagName: 'ul',
             events: {
                 'dblclick [data-dblclick]': '_handleDomEvents',
-                'focusout [contenteditable]': '_handleDomEvents',
-                'focusin [data-name=newItem]': '_handleNewItemEvents',
-                'focusout [data-name=newItem]': '_handleNewItemEvents',
-                'keypress [data-name=newItem]': '_handleNewItemEvents'
+                'click [data-click]': '_handleDomEvents',
+                'focusout [data-focusout]': '_handleDomEvents',
+                'focusin [data-focusin]': '_handleDomEvents',
+                'keypress [data-keypress]': '_handleDomEvents'
             }
         });
 
@@ -28,66 +29,104 @@ class ListView extends Backbone.View {
     }
 
     render() {
-        let $list = $(this.template(this.model.toJSON())),
-            $listItems = $list.children(),
-            items = this.model.items.toJSON();
+        let $list = this.$el.html(this.template(this.model.toJSON())),
+            $listItems = $list.children('[data-index]'),
+            items = this.model.items;
 
-            console.log(items.length);
+        items.forEach((item, i) => {
+            item.$domItem = $listItems.eq(i);
+            item.$domItem.data('dataItem', item);
+        });
 
-        if (_.isArray(items)) {
-            _.each(items, function(item, i) {
-                $listItems.eq(i).data('dataItem', item);
-            })
-        }
-
-        this.$el.html(this.template(this.model.toJSON()));
         return this.$el;
     }
 
     _handleDomEvents(e) {
         let type = e.type,
             $t = $(type === 'click' ? e.currentTarget : e.target),
-            item;
+            $item = $t.parents('[data-index]:eq(0)'),
+            item = $item.data('dataItem'),
+            cmd = $t.data(type),
+            reRender = false;
+        console.log(type+':'+cmd);
 
         if (type === 'dblclick') {
 
         } else if (type === 'click') {
 
+            switch (cmd) {
+
+                case 'edit':
+                    window.requestAnimationFrame((() => {
+                        let $item = item.set({
+                            _edit: true
+                        }).$domItem;
+
+                        return () => {
+                            $item.find('[data-name="desc"]:eq(0)').focusin().select();
+                        };
+                    })());
+                    break;
+
+                case 'delete':
+                    break;
+            }
+
         } else if (type === 'focusout') {
 
-        }
-    }
+            switch (cmd) {
+                case 'endEdit':
+                    item.set({
+                        _edit: false,
+                        description: $t.text().trim()
+                    });
+                    break;
 
-    _handleNewItemEvents(e) {
-        let $newItem = $(e.target),
-            desc;
+                case 'endAdd':
+                    $t.text($t.data('placeholder'));
+                    break;
+            }
+        } else if (type === 'focusin') {
 
-        e.stopPropagation();
+            switch (cmd) {
+                case 'startAdd':
+                    $t.text('');
+                    break;
 
-        switch (e.type) {
-            case 'focusin':
-                $newItem.text('');
-                break;
+                case 'startEdit':
+                    window.setTimeout(() => {
+                        let sel, range;
 
-            case 'focusout':
-                $newItem.text($newItem.data('placeholder'));
-                break;
+                        if (window.getSelection && document.createRange) {
+                            range = document.createRange();
+                            range.selectNodeContents(e.target);
+                            range.collapse(false);
+                            sel = window.getSelection();
+                            sel.removeAllRanges();
+                            sel.addRange(range);
+                        } else if (document.body.createTextRange) {
+                            range = document.body.createTextRange();
+                            range.moveToElementText(e.target);
+                            range.collapse(false);
+                            range.select();
+                        }
+                    }, 200);
+                    break;
+            }
 
-            case 'keypress':
-                if ((e.which || e.keyCode || e.charCode) === 13) {
-                    e.preventDefault();
+        } else if (type === 'keypress') {
 
-                    if ((desc = $newItem.text()).trim()) {
+            if ((e.which || e.keyCode || e.charCode) === 13) {
+                let desc = $t.text().trim();
 
-                        this.model.items.add({
-                            description: desc
-                        });
-
-                        $newItem.blur().focusout();
-                    }
+                if (desc) {
+                    this.model.items.add({
+                        description: desc
+                    });
                 }
-                break;
-
+            }
         }
+
     }
+
 }
