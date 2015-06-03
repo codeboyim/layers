@@ -1,11 +1,7 @@
 <% if(data.items && data.items.length) {
-_.each(data.items, function(item, i){%>
-<li class="layers-list-item" data-index="<%-i%>">
-	<% if(!item._edit) {%>
-	<div data-name="desc" data-dblclick="open"><%- item.description %></div><span data-click="edit">edit</span><span data-click="delete">delete</span>
-	<%}else{%>
-	<div data-name="desc" contenteditable data-focusin="startEdit" data-focusout="endEdit"><%- item.description %></div>
-	<%}%>
+_.each(data.items, function(item){%>
+<li class="layers-list-item" data-name="item">
+	<div data-name="desc" data-focusin="startEdit" data-dblclick="open"><%- item.description %></div><span data-click="edit">edit</span><span data-click="delete">delete</span>
 </li>
 <%});
 }%>

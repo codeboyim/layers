@@ -1,3 +1,5 @@
+import Backbone from 'backbone';
+
 class ItemModel extends Backbone.Model {
 
     initialize() {
@@ -23,3 +25,5 @@ class ItemModel extends Backbone.Model {
         };
     }
 }
+
+export default ItemModel;

@@ -1,3 +1,6 @@
+import LayersView from 'es6!views/layers';
+import $ from 'jquery';
+
 class Layers {
 
     constructor(options) {
@@ -9,5 +12,6 @@ class Layers {
 
         (new LayersView()).render().appendTo($(container));
     }
-
 }
+
+export default Layers;

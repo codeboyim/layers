@@ -1,3 +1,9 @@
+import Backbone from 'backbone';
+import tmplLayers from 'text!templates/layers.jst';
+import ListView from 'es6!views/list';
+import ItemModel from 'es6!models/item';
+import _ from 'underscore';
+
 class LayersView extends Backbone.View {
 
     constructor(options) {
@@ -39,3 +45,5 @@ class LayersView extends Backbone.View {
         return this.items.at(this.items.length - 1);
     }
 }
+
+export default LayersView;

@@ -7,10 +7,18 @@ var script = '',
     views = fs.readdirSync('src/views'),
     templates = fs.readdirSync('src/templates');
 
+function es6Transform(file) {
+    return babel.transform(fs.readFileSync(file), {
+        modules: 'ignore',
+        externalHelpers: true
+    }).code;
+}
+script += babel.buildExternalHelpers();
+
 models.forEach(function(m) {
 
     if (/\.js$/gi.test(m)) {
-        script += fs.readFileSync('src/models/' + m);
+        script += es6Transform('src/models/' + m);
     }
 })
 
@@ -32,12 +40,11 @@ templates.forEach(function(t) {
 
 views.forEach(function(v) {
     if (/\.js$/gi.test(v)) {
-        script += fs.readFileSync('src/views/' + v);
+        script += es6Transform('src/views/' + v);
     }
 })
 
-script += fs.readFileSync('src/main.js');
-script = babel.transform(script).code;
+script += es6Transform('src/main.js');
 
 script = fs.readFileSync('build/preFrag.js') + script;
 script += fs.readFileSync('build/postFrag.js');

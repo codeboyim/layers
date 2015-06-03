@@ -9,14 +9,27 @@
 </head>
 
 <body>
-    <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
-    <script type="text/javascript" src="../node_modules/underscore/underscore.js"></script>
-    <script type="text/javascript" src="../node_modules/backbone/backbone.js"></script>
-    <script type="text/javascript" src="../dist/main.js"></script>
+    <script src="../node_modules/requirejs/require.js"></script>
     <script>
-    new Layers({
-        container: document.body
+    requirejs.config({
+        baseUrl: '../src',
+        paths: {
+            'layers': 'main',
+            'backbone': '../node_modules/backbone/backbone',
+            'underscore': '../node_modules/underscore/underscore',
+            'jquery': '../node_modules/jquery/dist/jquery',
+            'es6': '../node_modules/requirejs-babel/es6',
+            'babel': '../node_modules/requirejs-babel/babel-4.6.6.min',
+            'text': '../node_modules/requirejs-text/text'
+        }
     });
+    </script>
+    <script>
+    require(['es6!layers'], function(Layers) {
+        new Layers({
+            container: document.body
+        });
+    })
     </script>
 </body>
 

@@ -1,3 +1,7 @@
+import Backbone from "backbone";
+import ItemModel from "es6!models/item";
+import tmplList from "text!templates/list.jst"
+
 class ListView extends Backbone.View {
 
     constructor(options) {
@@ -30,12 +34,11 @@ class ListView extends Backbone.View {
 
     render() {
         let $list = this.$el.html(this.template(this.model.toJSON())),
-            $listItems = $list.children('[data-index]'),
+            $listItems = $list.children('[data-name="item"]'),
             items = this.model.items;
 
         items.forEach((item, i) => {
-            item.$domItem = $listItems.eq(i);
-            item.$domItem.data('dataItem', item);
+            $listItems.eq(i).data('dataItem', item);
         });
 
         return this.$el;
@@ -44,11 +47,10 @@ class ListView extends Backbone.View {
     _handleDomEvents(e) {
         let type = e.type,
             $t = $(type === 'click' ? e.currentTarget : e.target),
-            $item = $t.parents('[data-index]:eq(0)'),
+            $item = $t.parents('[data-name="item"]:eq(0)'),
             item = $item.data('dataItem'),
             cmd = $t.data(type),
             reRender = false;
-        console.log(type+':'+cmd);
 
         if (type === 'dblclick') {
 
@@ -57,15 +59,7 @@ class ListView extends Backbone.View {
             switch (cmd) {
 
                 case 'edit':
-                    window.requestAnimationFrame((() => {
-                        let $item = item.set({
-                            _edit: true
-                        }).$domItem;
-
-                        return () => {
-                            $item.find('[data-name="desc"]:eq(0)').focusin().select();
-                        };
-                    })());
+                    $item.find('[data-name="desc"]:eq(0)').attr('contenteditable', true).focusin();
                     break;
 
                 case 'delete':
@@ -77,8 +71,9 @@ class ListView extends Backbone.View {
             switch (cmd) {
                 case 'endEdit':
                     item.set({
-                        _edit: false,
                         description: $t.text().trim()
+                    }, {
+                        silent: true
                     });
                     break;
 
@@ -130,3 +125,5 @@ class ListView extends Backbone.View {
     }
 
 }
+
+export default ListView;

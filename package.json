@@ -14,6 +14,9 @@
     "babel": "^5.4.5",
     "backbone": "^1.2.0",
     "jquery": "^2.1.4",
+    "requirejs": "^2.1.18",
+    "requirejs-babel": "0.0.6",
+    "requirejs-text": "^2.0.12",
     "underscore": "^1.8.3"
   }
 }
