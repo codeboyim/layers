@@ -1,10 +1,10 @@
 <% if(data.items && data.items.length) {
 _.each(data.items, function(item){%>
 <li class="layers-list-item" data-name="item">
-	<div data-name="desc" data-focusin="startEdit" data-dblclick="open"><%- item.description %></div><span data-click="edit">edit</span><span data-click="delete">delete</span>
+	<div data-name="desc" data-focusout="endEdit" data-focusin="startEdit" data-keypress="editItem" data-keyup="quitEdit" data-dblclick="open"><%- item.description %></div><span data-click="edit">edit</span><span data-click="delete">delete</span>
 </li>
 <%});
 }%>
 <li>
-	<div data-name="newItem" data-focusin="startAdd" data-focusout="endAdd" data-keypress="confirmAdd" contenteditable data-placeholder="enter new item here">enter new item here</div>
+	<div data-name="newItem" data-focusin="startAdd" data-focusout="endAdd" data-keypress="editNew" data-keyup="quitNew" contenteditable data-placeholder="enter new item here">enter new item here</div>
 </li>

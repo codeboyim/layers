@@ -15,7 +15,8 @@ class ListView extends Backbone.View {
                 'click [data-click]': '_handleDomEvents',
                 'focusout [data-focusout]': '_handleDomEvents',
                 'focusin [data-focusin]': '_handleDomEvents',
-                'keypress [data-keypress]': '_handleDomEvents'
+                'keypress [data-keypress]': '_handleDomEvents',
+                "keyup [data-keyup]": "_handleDomEvents"
             }
         });
 
@@ -75,10 +76,13 @@ class ListView extends Backbone.View {
                     }, {
                         silent: true
                     });
+                    $item.find("[data-name=\"desc\"]:eq(0)").attr("contenteditable", false);
                     break;
 
                 case 'endAdd':
-                    $t.text($t.data('placeholder'));
+                    if (!this._addNewItem($t.text().trim())) {
+                        $t.text($t.data("placeholder"));
+                    }
                     break;
             }
         } else if (type === 'focusin') {
@@ -111,17 +115,48 @@ class ListView extends Backbone.View {
 
         } else if (type === 'keypress') {
 
-            if ((e.which || e.keyCode || e.charCode) === 13) {
-                let desc = $t.text().trim();
+            switch (cmd) {
 
-                if (desc) {
-                    this.model.items.add({
-                        description: desc
-                    });
+                case "editNew":
+                case "editItem":
+
+                    if ((e.which || e.keyCode || e.charCode) === 13) {
+                        e.preventDefault();
+                        $t.blur();
+                    }
+
+                    break;
+            }
+        } else if (type === "keyup") {
+
+            if ((e.which || e.keyCode || e.charCode) === 27) {
+
+                switch (cmd) {
+                    case "quitNew":
+                        $t.text("");
+                        $t.blur();
+                        break;
+
+                    case "quitEdit":
+                        $t.text(item.get("description"));
+                        $t.blur();
+                        break;
                 }
             }
         }
 
+    }
+
+    _addNewItem(desc) {
+
+        if (desc) {
+            this.model.items.add({
+                description: desc
+            });
+            return true;
+        }
+
+        return false;
     }
 
 }
